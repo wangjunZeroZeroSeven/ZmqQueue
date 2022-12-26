@@ -31,6 +31,7 @@ endif()
 
 find_package(cppzmq)
 find_package(stduuid)
-target_link_libraries(main cppzmq stduuid::stduuid)
+find_package(concurrentqueue REQUIRED)
+target_link_libraries(main cppzmq stduuid::stduuid CONAN_PKG::concurrentqueue)
 # Set targets pre-processor defines
 target_compile_definitions(main PUBLIC -DZMQ_BUILD_DRAFT_API=1)
