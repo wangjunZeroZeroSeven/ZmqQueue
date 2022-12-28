@@ -22,6 +22,13 @@ T generateSingleData() {
     else if constexpr (std::is_same_v<T, Spike>) {
         return Spike{1, 2, 5, 6, 567};
     }
+    else if constexpr (std::is_same_v<T, OutputEvent>) {
+        return Spike{1, 2, 5, 6, 567};
+    }
+    else if constexpr (std::is_same_v<T, std::shared_ptr<std::vector<OutputEvent>>>) {
+        Spike s{1, 2, 5, 6, 567};
+        return std::make_shared<std::vector<OutputEvent>>(std::vector<OutputEvent>{s, s, s, s, s, s, s, s, s, s});
+    }
     else {
         throw "Unsupported type!";
     }
@@ -100,45 +107,21 @@ void test_ccqueue_transfer(const size_t data_count, const size_t send_thread_cou
     }
 }
 
-// void test_string()
-// {
-//     Zmqueue<std::string> queue;
-
-//     std::thread th([&queue](){
-//         queue.send("aaa");
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//         queue.send("bbb");
-//         std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//         queue.send("ccc");
-//         queue.send("ddd");
-//     });
-
-//     std::string data;
-//     queue.blockingReceive(data, std::chrono::milliseconds(100));
-//     std::cout << "first data: " << data << std::endl;
-//     queue.blockingReceive(data, std::chrono::milliseconds(100));
-//     std::cout << "second data: " << data << std::endl;
-//     queue.blockingReceive(data, std::chrono::milliseconds(100));
-//     std::cout << "second data: " << data << std::endl;
-//     queue.blockingReceive(data, std::chrono::milliseconds(100));
-//     std::cout << "second data: " << data << std::endl;
-
-//     assert(!queue.receive(data));
-
-//     th.join();  
-// }
-
 int main()
 {
     std::cout << "Good" << std::endl;
     // test_zmq_transfer<int>(100000000, 3);
     // test_zmq_transfer<std::string>(100000000, 3);
-    test_zmq_transfer<Spike>(100000000, 3);
+    // test_zmq_transfer<Spike>(100000000, 3);
+    // test_zmq_transfer<OutputEvent>(100000000, 3);
+    test_zmq_transfer<std::shared_ptr<std::vector<OutputEvent>>>(100000000, 3);
 
 
     // test_ccqueue_transfer<int>(100000000, 3);
     // test_ccqueue_transfer<std::string>(100000000, 3);
-    test_ccqueue_transfer<Spike>(100000000, 3);
+    // test_ccqueue_transfer<Spike>(100000000, 3);
+    // test_ccqueue_transfer<OutputEvent>(100000000, 3);
+    test_ccqueue_transfer<std::shared_ptr<std::vector<OutputEvent>>>(100000000, 3);
 
     // test_string();
     // test_int();

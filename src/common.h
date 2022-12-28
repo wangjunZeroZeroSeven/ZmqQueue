@@ -8,13 +8,10 @@
 #include "zmq.hpp"
 #include "zmq_addon.hpp"
 
-struct Spike {
-    uint8_t layer;
-    uint16_t feature;
-    uint8_t y;
-    uint8_t x;
-    uint32_t timestamp;
-};
+#include "event.h"
+
+#include <vector>
+#include <memory>
 
 template<typename T>
 bool transferPointer = (!std::is_trivially_copyable_v<T> || sizeof(T) > sizeof(void*) * 10);
@@ -27,5 +24,11 @@ bool transferPointer<std::string> = true;
 
 template<>
 bool transferPointer<Spike> = true;
+
+template<>
+bool transferPointer<OutputEvent> = true;
+
+template<>
+bool transferPointer<std::shared_ptr<std::vector<OutputEvent>>> = true;
 
 #endif
