@@ -34,6 +34,9 @@ public:
 
     ~ZMQPuller() 
     {
+        // If data is transfered by address, we need to make sure that each address is received and released to prevent memory leak.
+        // Currently I just receive all messages then close socket which is not enough to make sure of that.
+        // An approach to ensure it decently is to change the socket type from push/pull to router/dealer and always make another side aware of leaving of current side, so another side can stop sending address to this side or receiving any address from this side. This is only necessary when you use `AddressEncoder`.
         zmq::message_t message;
         while (socket.recv(message, zmq::recv_flags::dontwait)) {
             encoder->clear(std::move(message));
